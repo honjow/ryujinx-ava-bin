@@ -8,7 +8,7 @@ arch=(x86_64)
 url='https://github.com/Ryujinx/release-channel-master'
 license=('MIT')
 depends=('dotnet-runtime')
-provides=(ryujinx)
+provides=(ryujinx-ava)
 conflicts=(ryujinx-ava Ryujinx-ava)
 options=('!strip')
 source=("${url}/releases/download/${pkgver}/test-ava-ryujinx-${pkgver}-linux_x64.tar.gz"
@@ -36,6 +36,9 @@ package() {
         # replace 'Name=Ryujinx' to 'Name=Ryujinx Ava' in Ryujinx.desktop
         sed --in-place 's/Name=Ryujinx/Name=Ryujinx Ava/' "${srcdir}/Ryujinx.desktop"
 
-        install -D "${srcdir}/Ryujinx.desktop" "${pkgdir}/usr/share/applications/Ryujinx.desktop"
-        install -D "${srcdir}/Logo.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/Ryujinx.svg"
+        # replace 'Icon=Ryujinx' to 'Icon=Ryujinx-ava' in Ryujinx.desktop
+        sed --in-place 's/Icon=Ryujinx/Icon=Ryujinx-ava/' "${srcdir}/Ryujinx.desktop"
+
+        install -D "${srcdir}/Ryujinx.desktop" "${pkgdir}/usr/share/applications/Ryujinx-ava.desktop"
+        install -D "${srcdir}/Logo.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/Ryujinx-ava.svg"
 }
