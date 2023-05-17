@@ -39,6 +39,9 @@ package() {
         # replace 'Icon=Ryujinx' to 'Icon=Ryujinx-ava' in Ryujinx.desktop
         sed --in-place 's/Icon=Ryujinx/Icon=Ryujinx-ava/' "${srcdir}/Ryujinx.desktop"
 
+        # replace 'Exec=env ' to 'Exec=env LC_ALL=C ' in Ryujinx.desktop
+        sed --in-place 's/Exec=env /Exec=env LC_ALL=C /' "${srcdir}/Ryujinx.desktop"
+
         install -D "${srcdir}/Ryujinx.desktop" "${pkgdir}/usr/share/applications/Ryujinx-ava.desktop"
         install -D "${srcdir}/Logo.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/Ryujinx-ava.svg"
 }
