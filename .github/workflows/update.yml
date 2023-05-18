@@ -14,9 +14,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
     
-      - name: Install Git
+      - name: Install
         run: |
-          pacman --noconfirm -Sy git
+          pacman -Syu base-devel sudo meson python-mako glslang hub --noconfirm
     
       - name: Set up Git
         run: |

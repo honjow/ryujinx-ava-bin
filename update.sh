@@ -33,10 +33,10 @@ if [[ "$current_version" != "$latest_version" ]]; then
     cp -r pkgbuild/.SRCINFO .
     rm -rf pkgbuild
 
-  # 更新项目
-#   git add PKGBUILD
-#   git commit -m "Update to $latest_version"
-#   git push
+    # 更新项目
+    git add PKGBUILD .SRCINFO
+    git commit -m "Update to $latest_version"
+    git push
 
     exit 0  # 退出状态码表示成功
 else
