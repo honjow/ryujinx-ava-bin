@@ -1,0 +1,20 @@
+name: Update AUR package
+
+on:
+    schedule:
+      - cron: "0 */6 * * *"
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    container:
+        image: archlinux:latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Update PKGBUILD
+        run: |
+          # 获取依赖项目的最新版本号
+          ./update.sh
