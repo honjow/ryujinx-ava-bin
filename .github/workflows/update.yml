@@ -32,6 +32,12 @@ jobs:
           # 获取依赖项目的最新版本号
           ./update.sh
 
+      - name: Commit changes
+        if: ${{ steps.update.outcome == 'success' }}
+        run: |
+          git add PKGBUILD .SRCINFO
+          git commit -m "Update PKGBUILD"
+
       - name: Push changes
         if: ${{ steps.update.outcome == 'success' }}
         uses: ad-m/github-push-action@v0.6.0
