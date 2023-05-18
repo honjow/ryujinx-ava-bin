@@ -3,71 +3,29 @@ name: Update AUR package
 on:
     workflow_dispatch:
     schedule:
-      - cron: "0 */6 * * *"
+      - cron: "0 */4 * * *"
 
 jobs:
   update:
     runs-on: ubuntu-latest
-    container:
-      image: archlinux:latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-    
-      - name: Install prerequisites
-        run: |
-          echo "ParallelDownloads = 10" >> /etc/pacman.conf
-          echo "\n" && echo "[multilib]" >> /etc/pacman.conf
-          echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
-          pacman -Syu base-devel sudo git openssh --noconfirm
-    
-      - name: Set up Git
-        run: |
-          git config --global user.name "honjow"
-          git config --global user.email "honjow311@gmail.com"   
+  
 
       - name: Update PKGBUILD
         id: update
         run: |
-          # 获取依赖项目的最新版本号
           ./update.sh
-      - name: AUR IdentityFile
-        if: ${{ steps.update.outcome == 'success' }}
-        run: |
-          echo "$AUR_IDENTITY_FILE" > id_aur
-          chmod 600 id_aur
-          # set ssh config
-          id_aur_path=$(pwd)/id_aur
-          mkdir -p ~/.ssh
-          echo "Host aur.archlinux.org" >> ~/.ssh/config
-          echo "  IdentityFile ${id_aur_path}" >> ~/.ssh/config
-          echo "  User aur" >> ~/.ssh/config
-          #ssh -T -v aur@aur.archlinux.org
-          ssh -T -i ${id_aur_path} -v aur@aur.archlinux.org
-        env:
-            AUR_IDENTITY_FILE: ${{ secrets.AUR_IDENTITY_FILE }}
 
-      - name: Clone AUR repo
+      - name: Publish AUR package
         if: ${{ steps.update.outcome == 'success' }}
-        run: |
-          #id_aur_path=$(pwd)/id_aur
-          #echo ${id_aur_path}
-          #export GIT_SSH_COMMAND="ssh -i ${id_aur_path}"
-          AUR_REPO=$(cat PKGBUILD | grep pkgname | cut -d '=' -f 2 | tr -d '[:space:]')
-          echo ${AUR_REPO}
-          git clone ssh://aur@aur.archlinux.org/ryujinx-ava-bin.git
-          cd ryujinx-ava-bin
-          ls -l
-
-      - name: Commit changes
-        if: ${{ steps.update.outcome == 'success' }}
-        run: |
-          git add PKGBUILD .SRCINFO
-          git commit -m "Update PKGBUILD"
-
-      - name: Push changes
-        if: ${{ steps.update.outcome == 'success' }}
-        uses: ad-m/github-push-action@v0.6.0
+        uses: KSXGitHub/github-actions-deploy-aur@2.7.0
         with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            branch: ${{ github.ref }}
+            pkgname: ryujinx-ava-bin
+            pkgbuild: ./PKGBUILD
+            commit_username: ${{ secrets.AUR_USERNAME }}
+            commit_email: ${{ secrets.AUR_EMAIL }}
+            ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
+            commit_message: Update AUR package
+            ssh_keyscan_types: rsa,dsa,ecdsa,ed25519
