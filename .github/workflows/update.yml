@@ -36,18 +36,25 @@ jobs:
         run: |
           echo "$AUR_IDENTITY_FILE" > id_aur
           chmod 600 id_aur
+          # set ssh config
+          id_aur_path=$(pwd)/id_aur
+          mkdir -p ~/.ssh
+          echo "Host aur.archlinux.org" >> ~/.ssh/config
+          echo "  IdentityFile ${id_aur_path}" >> ~/.ssh/config
+          echo "  User aur" >> ~/.ssh/config
         env:
             AUR_IDENTITY_FILE: ${{ secrets.AUR_IDENTITY_FILE }}
 
       - name: Clone AUR repo
         if: ${{ steps.update.outcome == 'success' }}
         run: |
-          id_aur_path=$(pwd)/id_aur
-          echo ${id_aur_path}
-          export GIT_SSH_COMMAND="ssh -i ${id_aur_path}"
+          #id_aur_path=$(pwd)/id_aur
+          #echo ${id_aur_path}
+          #export GIT_SSH_COMMAND="ssh -i ${id_aur_path}"
           AUR_REPO=$(cat PKGBUILD | grep pkgname | cut -d '=' -f 2 | tr -d '[:space:]')
-          git clone ssh://aur@aur.archlinux.org/$AUR_REPO.git
-          cd $AUR_REPO
+          echo ${AUR_REPO}
+          git clone ssh://aur@aur.archlinux.org/ryujinx-ava-bin.git
+          cd ryujinx-ava-bin
           ls -l
 
       - name: Commit changes
