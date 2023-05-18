@@ -19,7 +19,7 @@ jobs:
           echo "ParallelDownloads = 10" >> /etc/pacman.conf
           echo "\n" && echo "[multilib]" >> /etc/pacman.conf
           echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
-          pacman -Syu base-devel sudo openssh --noconfirm
+          pacman -Syu base-devel sudo git openssh --noconfirm
     
       - name: Set up Git
         run: |
