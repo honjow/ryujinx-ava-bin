@@ -31,6 +31,23 @@ jobs:
         run: |
           # 获取依赖项目的最新版本号
           ./update.sh
+      - name: AUR IdentityFile
+        if: ${{ steps.update.outcome == 'success' }}
+        run: |
+          echo "$AUR_IDENTITY_FILE" > id_aur
+          chmod 600 id_aur
+        env:
+            AUR_IDENTITY_FILE: ${{ secrets.AUR_IDENTITY_FILE }}
+
+      - name: Clone AUR repo
+        if: ${{ steps.update.outcome == 'success' }}
+        run: |
+          id_aur_path=$(pwd)/id_aur
+          export GIT_SSH_COMMAND='ssh -i id_aur_path'
+          AUR_REPO=$(cat PKGBUILD | grep pkgname | cut -d '=' -f 2 | tr -d '[:space:]')
+          git clone ssh://aur@aur.archlinux.org/$AUR_REPO.git
+          cd $AUR_REPO
+          ls -l
 
       - name: Commit changes
         if: ${{ steps.update.outcome == 'success' }}
