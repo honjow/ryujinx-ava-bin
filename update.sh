@@ -10,26 +10,36 @@ echo "Latest Ryujinx version: $latest_version"
 
 # 检查最新版本号是否为空
 if [[ -z "$latest_version" ]]; then
-  echo "Failed to get the latest version. Please check your network connection or API response."
-  exit 2  # 退出状态码表示获取最新版本号失败
+    echo "Failed to get the latest version. Please check your network connection or API response."
+    exit 2  # 退出状态码表示获取最新版本号失败
 fi
 
 # 比较版本号
 if [[ "$current_version" != "$latest_version" ]]; then
-  # 检测到新版本号较大，执行后续步骤
-  echo "Updating PKGBUILD to version $latest_version"
+    # 检测到新版本号较大，执行后续步骤
+    echo "Updating PKGBUILD to version $latest_version"
   
-  # 替换版本号
-  sed -i "s/pkgver=.*/pkgver=$latest_version/" PKGBUILD
-  makepkg --printsrcinfo > .SRCINFO
+    # 替换版本号
+    sed -i "s/pkgver=.*/pkgver=$latest_version/" PKGBUILD
+
+    mkdir pkgbuild
+    cp -r PKGBUILD pkgbuild
+    echo "nobody ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+    chown -R nobody:nobody pkgbuild
+    cd pkgbuild
+#   makepkg --printsrcinfo > .SRCINFO
+    sudo -u nobody -- sh -c "makepkg --printsrcinfo > .SRCINFO"
+    cd ..
+    cp -r pkgbuild/.SRCINFO .
+    rm -rf pkgbuild
 
   # 更新项目
 #   git add PKGBUILD
 #   git commit -m "Update to $latest_version"
 #   git push
 
-  exit 0  # 退出状态码表示成功
+    exit 0  # 退出状态码表示成功
 else
-  echo "No update needed. Current version is up to date."
-  exit 1  # 退出状态码表示无需更新
+    echo "No update needed. Current version is up to date."
+    exit 1  # 退出状态码表示无需更新
 fi
