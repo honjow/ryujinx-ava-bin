@@ -43,7 +43,7 @@ jobs:
         if: ${{ steps.update.outcome == 'success' }}
         run: |
           id_aur_path=$(pwd)/id_aur
-          export GIT_SSH_COMMAND='ssh -i id_aur_path'
+          export GIT_SSH_COMMAND='ssh -i $id_aur_path -o IdentitiesOnly=yes'
           AUR_REPO=$(cat PKGBUILD | grep pkgname | cut -d '=' -f 2 | tr -d '[:space:]')
           git clone ssh://aur@aur.archlinux.org/$AUR_REPO.git
           cd $AUR_REPO
