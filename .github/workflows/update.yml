@@ -20,7 +20,7 @@ jobs:
 
       - name: Publish AUR package
         if: ${{ steps.update.outcome == 'success' }}
-        uses: KSXGitHub/github-actions-deploy-aur@2.7.0
+        uses: KSXGitHub/github-actions-deploy-aur@v2.7.0
         with:
             pkgname: ryujinx-ava-bin
             pkgbuild: ./PKGBUILD
