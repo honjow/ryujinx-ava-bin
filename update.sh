@@ -22,16 +22,15 @@ if [[ "$current_version" != "$latest_version" ]]; then
     # 替换版本号
     sed -i "s/pkgver=.*/pkgver=$latest_version/" PKGBUILD
 
-    mkdir pkgbuild
-    cp -r PKGBUILD pkgbuild
-    echo "nobody ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
-    chown -R nobody:nobody pkgbuild
-    cd pkgbuild
-#   makepkg --printsrcinfo > .SRCINFO
-    sudo -u nobody -- sh -c "makepkg --printsrcinfo > .SRCINFO"
-    cd ..
-    cp -r pkgbuild/.SRCINFO .
-    rm -rf pkgbuild
+    # mkdir pkgbuild
+    # cp -r PKGBUILD pkgbuild
+    # echo "nobody ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+    # chown -R nobody:nobody pkgbuild
+    # cd pkgbuild
+    # sudo -u nobody -- sh -c "makepkg --printsrcinfo > .SRCINFO"
+    # cd ..
+    # cp -r pkgbuild/.SRCINFO .
+    # rm -rf pkgbuild
 
 
     exit 0  # 退出状态码表示成功
