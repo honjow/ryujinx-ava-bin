@@ -9,11 +9,14 @@ jobs:
   update:
     runs-on: ubuntu-latest
     container:
-        image: archlinux:latest
-
+      image: archlinux:latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+    
+      - name: Install Git
+        run: |
+          pacman --noconfirm -Sy git
     
       - name: Set up Git
         run: |
