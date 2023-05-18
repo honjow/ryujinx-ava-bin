@@ -42,7 +42,7 @@ jobs:
           echo "Host aur.archlinux.org" >> ~/.ssh/config
           echo "  IdentityFile ${id_aur_path}" >> ~/.ssh/config
           echo "  User aur" >> ~/.ssh/config
-          ssh -T -v aur@aur.archlinux.org
+          #ssh -T -v aur@aur.archlinux.org
           ssh -T -i ${id_aur_path} -v aur@aur.archlinux.org
         env:
             AUR_IDENTITY_FILE: ${{ secrets.AUR_IDENTITY_FILE }}
