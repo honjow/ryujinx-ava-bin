@@ -1,6 +1,7 @@
 name: Update AUR package
 
 on:
+    workflow_dispatch:
     schedule:
       - cron: "*/5 * * * *"
 
@@ -13,6 +14,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+    
+      - name: Set up Git
+        run: |
+          git config --global user.name "honjow"
+          git config --global user.email "honjow311@gmail.com"   
 
       - name: Update PKGBUILD
         run: |

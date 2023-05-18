@@ -24,9 +24,9 @@ if [[ "$current_version" != "$latest_version" ]]; then
   makepkg --printsrcinfo > .SRCINFO
 
   # 更新项目
-  git add PKGBUILD
-  git commit -m "Update to $latest_version"
-  git push
+#   git add PKGBUILD
+#   git commit -m "Update to $latest_version"
+#   git push
 
   exit 0  # 退出状态码表示成功
 else
