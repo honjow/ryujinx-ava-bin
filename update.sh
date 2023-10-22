@@ -32,7 +32,6 @@ if [[ "$current_version" != "$latest_version" ]]; then
     # cp -r pkgbuild/.SRCINFO .
     # rm -rf pkgbuild
 
-
     exit 0  # 退出状态码表示成功
 else
     echo "No update needed. Current version is up to date."
