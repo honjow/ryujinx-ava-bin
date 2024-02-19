@@ -18,6 +18,15 @@ jobs:
         run: |
           ./update.sh
 
+      - name: Commit changes
+        if: ${{ steps.update.outcome == 'success' }}
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "GitHub Actions"
+          git add PKGBUILD
+          git commit -m "Update PKGBUILD"
+          git push
+
       - name: Publish AUR package
         if: ${{ steps.update.outcome == 'success' }}
         uses: KSXGitHub/github-actions-deploy-aur@v2.7.0
