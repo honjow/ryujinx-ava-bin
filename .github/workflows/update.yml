@@ -18,14 +18,23 @@ jobs:
         run: |
           ./update.sh
 
+      - name: Get Current Version
+        id: get_version
+        run: |
+          echo "::set-output name=version::$(grep 'pkgver=' PKGBUILD | cut -d'=' -f2)"
+
       - name: Commit and push changes
         if: ${{ steps.update.outcome == 'success' }}
         uses: EndBug/add-and-commit@v9
         with:
             default_author: github_actions
-            message: Update PKGBUILD
+            message: Update to ${{ steps.get_version.outputs.version }}
             add: PKGBUILD
             push: true
+
+      - name: Get last commit message
+        id: last_commit
+        run: echo "::set-output name=message::$(git log -1 --pretty=format:%s)"
 
       - name: Publish AUR package
         if: ${{ steps.update.outcome == 'success' }}
@@ -36,5 +45,5 @@ jobs:
             commit_username: ${{ secrets.AUR_USERNAME }}
             commit_email: ${{ secrets.AUR_EMAIL }}
             ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
-            commit_message: Update AUR package
+            commit_message: ${{ steps.last_commit.outputs.message }}
             ssh_keyscan_types: rsa,dsa,ecdsa,ed25519

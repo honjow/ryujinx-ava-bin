@@ -1,7 +1,7 @@
 # Maintainer: honjow
 
 pkgname=ryujinx-ava-bin
-pkgver=1.1.1249
+pkgver=1.1.1240
 pkgrel=1
 pkgdesc='Experimental Nintendo Switch Emulator written in C# (master build channel release, test ava build)'
 arch=(x86_64)
@@ -21,17 +21,23 @@ b2sums=('SKIP'
 
 package() {
         mkdir --parents "${pkgdir}/opt"
-        cp --recursive "${srcdir}/publish" "${pkgdir}/opt/ryujinx-ava"
+        cp -a "${srcdir}/publish" "${pkgdir}/opt/ryujinx-ava"
         chmod +x "${pkgdir}/opt/ryujinx-ava/Ryujinx.Ava"
+        chmod +x "${pkgdir}/opt/ryujinx-ava/Ryujinx"
+
+        # if Ryujinx.Ava same as Ryujinx, delete Ryujinx.Ava
+        if cmp --silent "${pkgdir}/opt/ryujinx-ava/Ryujinx.Ava" "${pkgdir}/opt/ryujinx-ava/Ryujinx"; then
+                rm "${pkgdir}/opt/ryujinx-ava/Ryujinx.Ava"
+        fi
 
         # create writable logs directory
         install --directory --mode=777 "${pkgdir}/opt/ryujinx-ava/Logs"
 
         mkdir --parents "${pkgdir}/usr/bin"
-        ln --symbolic "/opt/ryujinx-ava/Ryujinx.Ava" "${pkgdir}/usr/bin/Ryujinx.Ava"
+        # ln --symbolic "/opt/ryujinx-ava/Ryujinx.Ava" "${pkgdir}/usr/bin/Ryujinx.Ava"
+        ln -s "/opt/ryujinx-ava/Ryujinx.sh" "${pkgdir}/usr/bin/Ryujinx"
 
-        # replace 'Ryujinx %f' to 'Ryujinx.Ava %f' in Ryujinx.desktop
-        sed --in-place 's/Ryujinx %f/Ryujinx.Ava %f/' "${srcdir}/Ryujinx.desktop"
+        sed --in-place 's/Exec=Ryujinx.sh %f/Exec=Ryujinx %f/' "${srcdir}/Ryujinx.desktop"
 
         # replace 'Name=Ryujinx' to 'Name=Ryujinx Ava' in Ryujinx.desktop
         sed --in-place 's/Name=Ryujinx/Name=Ryujinx Ava/' "${srcdir}/Ryujinx.desktop"
